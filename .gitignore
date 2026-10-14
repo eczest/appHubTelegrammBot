@@ -1,0 +1,10 @@
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+.DS_Store
+data/channel_menu_state.json
+data/channel_menu_runtime.json
+data/admin_users.json
+data/menu_timer.json

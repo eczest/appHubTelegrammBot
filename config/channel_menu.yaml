@@ -1,0 +1,66 @@
+title: "Добро пожаловать в AppHub! 👋"
+description: "Выберите интересующую категорию:"
+image: "assets/categories/appHubMainphoto.jpg"
+
+button_rows:
+  - buttons:
+      - id: "contact"
+        text: "📞 Связаться с нами"
+        url: "https://t.me/apphub_applehub"
+
+  - buttons:
+      - id: "iphone"
+        text: "📱 iPhone"
+        url: "https://t.me/apphub_store/4041"
+      - id: "macbook"
+        text: "💻 MacBook"
+        url: "https://t.me/apphub_store/4042"
+
+  - buttons:
+      - id: "apple_watch"
+        text: "⌚ Apple Watch"
+        url: "https://t.me/apphub_store/4035"
+      - id: "playstation_5"
+        text: "🎮 PlayStation 5"
+        url: "https://t.me/apphub_store/4036"
+
+  - buttons:
+      - id: "dyson_vacuum"
+        text: "🧹 Dyson Пылесос"
+        url: "https://t.me/apphub_store/4037"
+      - id: "dyson_beauty"
+        text: "💨 Dyson Красота"
+        url: "https://t.me/apphub_store/4038"
+
+  - buttons:
+      - id: "rayban_meta"
+        text: "🕶 Ray-Ban Meta"
+        url: "https://t.me/apphub_store/4039"
+      - id: "canon"
+        text: "📷 Canon"
+        url: "https://t.me/apphub_store/4040"
+
+  - buttons:
+      - id: "address_ekaterinburg"
+        text: "🏠 Адрес Екатеринбург"
+        url: "https://2gis.ru/ekaterinburg/geo/70000001094561316"
+
+  - buttons:
+      - id: "address_chelyabinsk"
+        text: "🏠 Адрес Челябинск"
+        url: "https://2gis.ru/chelyabinsk/geo/70000001114761142"
+
+  - buttons:
+      - id: "address_perm"
+        text: "🏠 Адрес Пермь"
+        url: "https://2gis.ru/perm/geo/70000001110271694"
+
+  - buttons:
+      - id: "address_kazan"
+        text: "🏠 Адрес Казань"
+        url: "https://2gis.ru/kazan/geo/70000001081292614"
+
+  - buttons:
+      - id: "yandex_reviews"
+        text: "💬 Отзывы Яндекс"
+        url: "https://yandex.ru/maps/org/apphub/229219943249/reviews?utm_referrer=https%3A%2F%2Fwww.google.com%2F"
