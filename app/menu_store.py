@@ -70,3 +70,28 @@ class MenuStore:
         self.save(updated)
         return removed
 
+    def move_button(self, button_id: str, direction: int) -> bool:
+        if direction not in {-1, 1}:
+            raise ValueError("direction must be -1 or 1")
+
+        menu = self.load()
+        row_sizes = [len(row.buttons) for row in menu.button_rows]
+        buttons = [button for row in menu.button_rows for button in row.buttons]
+        try:
+            current_index = next(index for index, button in enumerate(buttons) if button.id == button_id)
+        except StopIteration:
+            return False
+
+        target_index = current_index + direction
+        if target_index < 0 or target_index >= len(buttons):
+            return False
+        buttons[current_index], buttons[target_index] = buttons[target_index], buttons[current_index]
+
+        rows: list[ChannelMenuRow] = []
+        offset = 0
+        for size in row_sizes:
+            rows.append(ChannelMenuRow(buttons=tuple(buttons[offset : offset + size])))
+            offset += size
+        self.save(ChannelMenu(menu.title, menu.description, menu.image, tuple(rows)))
+        return True
+

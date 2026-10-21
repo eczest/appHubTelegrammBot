@@ -52,3 +52,19 @@ def test_menu_store_delete_unknown_is_noop(tmp_path: Path) -> None:
     assert store.delete_button("missing") is None
     assert store.load().button_count == 2
 
+
+def test_menu_store_moves_buttons_and_preserves_row_sizes(tmp_path: Path) -> None:
+    base = tmp_path / "menu.yaml"
+    _base_menu(base)
+    store = MenuStore(base, tmp_path / "menu.json")
+    added = store.add_button("Samsung", "https://example.com/samsung")
+
+    assert store.move_button(added.id, -1) is True
+    menu = store.load()
+    assert [[button.text for button in row.buttons] for row in menu.button_rows] == [
+        ["iPhone", "Samsung"],
+        ["MacBook"],
+    ]
+    assert store.move_button("iphone", -1) is False
+    assert store.move_button("missing", 1) is False
+

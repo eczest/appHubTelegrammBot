@@ -241,6 +241,32 @@ async def delete_button(callback: CallbackQuery, settings: Settings) -> None:
         await callback.message.answer(f"Кнопка «{escape(removed.text)}» удалена. Проверьте через /test.")
 
 
+@router.callback_query(F.data == "buttons:reorder")
+async def reorder_buttons_panel(callback: CallbackQuery, settings: Settings) -> None:
+    if not await _ensure_admin_callback(callback, settings):
+        return
+    await callback.answer()
+    if callback.message:
+        await callback.message.answer(
+            "Меняйте порядок стрелками. После завершения проверьте меню через /test.",
+            reply_markup=_reorder_buttons_keyboard(),
+        )
+
+
+@router.callback_query(F.data.startswith("buttons:move:"))
+async def move_button(callback: CallbackQuery, settings: Settings) -> None:
+    if not await _ensure_admin_callback(callback, settings):
+        return
+    parts = (callback.data or "").split(":")
+    if len(parts) != 4 or parts[3] not in {"up", "down"}:
+        await callback.answer("Некорректная команда", show_alert=True)
+        return
+    moved = menu_store.move_button(parts[2], -1 if parts[3] == "up" else 1)
+    await callback.answer("Порядок изменён" if moved else "Дальше переместить нельзя")
+    if callback.message and moved:
+        await callback.message.edit_reply_markup(reply_markup=_reorder_buttons_keyboard())
+
+
 @router.message(Command("managers"))
 async def managers_panel(message: Message, settings: Settings, state: FSMContext) -> None:
     if not await _ensure_owner_message(message, settings):
@@ -372,9 +398,35 @@ async def _send_buttons_panel(message: Message) -> None:
         inline_keyboard=[
             [InlineKeyboardButton(text="Добавить кнопку", callback_data="buttons:add")],
             [InlineKeyboardButton(text="Удалить кнопку", callback_data="buttons:delete")],
+            [InlineKeyboardButton(text="Изменить порядок", callback_data="buttons:reorder")],
         ]
     )
     await message.answer("\n".join(lines), reply_markup=keyboard)
+
+
+def _reorder_buttons_keyboard() -> InlineKeyboardMarkup:
+    buttons = [button for row in menu_store.load().button_rows for button in row.buttons]
+    rows: list[list[InlineKeyboardButton]] = []
+    for index, button in enumerate(buttons):
+        row = [InlineKeyboardButton(text=button.text, callback_data="buttons:noop")]
+        if index > 0:
+            row.append(
+                InlineKeyboardButton(text="⬆️", callback_data=f"buttons:move:{button.id}:up")
+            )
+        if index < len(buttons) - 1:
+            row.append(
+                InlineKeyboardButton(text="⬇️", callback_data=f"buttons:move:{button.id}:down")
+            )
+        rows.append(row)
+    rows.append([InlineKeyboardButton(text="Готово", callback_data="admin:cancel")])
+    return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+@router.callback_query(F.data == "buttons:noop")
+async def button_reorder_noop(callback: CallbackQuery, settings: Settings) -> None:
+    if not await _ensure_admin_callback(callback, settings):
+        return
+    await callback.answer("Используйте стрелки справа")
 
 
 def _timer_keyboard() -> InlineKeyboardMarkup:
